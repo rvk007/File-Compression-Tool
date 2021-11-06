@@ -9,14 +9,13 @@
 #include <stdbool.h>
 
 #include "encode_file.h"
-#include "utility.h"
 
 // encode a single file using mmap
 Data encode_file(char *filename, char last_alpha, int last_count, int fileindex)
 {
     struct stat fs;
     Data data;
-    char *str_alpha = malloc(1),*str_count = malloc(100000);
+    char *str_alpha = malloc(1);
     int fd = open(filename, O_RDONLY, 0644), count = 1;
     data.compressed_data = malloc(100000);
 
@@ -38,13 +37,9 @@ Data encode_file(char *filename, char last_alpha, int last_count, int fileindex)
         if(file_content[i] == alpha_prev) count ++;
         else
         {   
-            str_count = itoa(count);
             str_alpha[0] = alpha_prev;
             if (data.if_last_match)
             {
-                str_count = itoa(last_count+count);
-                // strcat(data.compressed_data, str_alpha);
-                // strcat(data.compressed_data, str_count);
                 printf("%c%u",alpha_prev,last_count+count);
                 fflush(stdout);
                 data.if_last_match = false;
@@ -56,8 +51,6 @@ Data encode_file(char *filename, char last_alpha, int last_count, int fileindex)
             }
             else 
             {
-                // strcat(data.compressed_data, str_alpha);
-                // strcat(data.compressed_data, str_count);
                 printf("%c%u",alpha_prev,count);
                 fflush(stdout);
             }
