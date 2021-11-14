@@ -1,30 +1,35 @@
-#include <sys/mman.h> // PROT_READ
-#include <stdio.h> // NULL
 #include <stdlib.h>
-#include <sys/stat.h>
+#include <pthread.h>
+#include <stdio.h>
 #include <unistd.h>
-#include <fcntl.h> // for permissions in open()
-#include <ctype.h>
 #include <string.h>
-#include <stdbool.h>
 
-#include "encode_file.h"
-#include "utility.h"
+#include "sequential_rle.h"
+#include "parallel_rle.h"
 
-int main(int argc,char **argv)
-{   
-    char last_alpha;
-    int last_count = 0;
-    bool if_last_match = false;
-
-    Data file_data;
-    for(int i=1;i<=argc-1;i++)
-    {
-        file_data = encode_file(argv[i], last_alpha, last_count, i);
-        last_alpha = file_data.last_alpha;
-        last_count = file_data.last_count;
-        if_last_match = file_data.if_last_match;
+int main(int argc, char **argv){   
+    int start, fileCount, i, threadCount=0, argJ=0;
+    for(i=0;i<argc;i++)
+    {   
+        if(strcmp(argv[i],"-j")==0)
+        {
+            argJ = 1;
+            threadCount=atoi(argv[i+1]);
+            break;
+        }
     }
-    printf("%c%u",last_alpha,last_count);
-    fflush(stdout);
+    
+    if (argJ) 
+    {
+        start = i+2; fileCount=argc-(i+1)-1;
+        if(threadCount == 0) return 0;
+        else if (threadCount == 1) sequential_rle(argv, start, fileCount);
+        else if (threadCount>1) paralle_rle(argv, start, fileCount, threadCount);
+    }
+    else
+    {
+        start = 1; fileCount=argc-1;
+        sequential_rle(argv, start, fileCount);
+    }
+    return 0;
 }
