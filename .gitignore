@@ -2,3 +2,5 @@
 .DS_Store
 nyuenc-rr3937/
 *.tar.xz
+__MACOSX
+strace.txt
