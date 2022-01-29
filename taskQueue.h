@@ -4,6 +4,7 @@
 typedef struct task {
     int sequenceNumber;
     char *fileContent;
+    int fileSize;
     int index;
 } Task;
 
@@ -21,7 +22,5 @@ typedef struct tq {
 void taskInitialize(taskqueue *tq);
 Task taskDequeue(taskqueue *tq);
 void taskEnqueue(taskqueue *tq, Task t);
-int taskIsempty(taskqueue *tq);
-// void taskDisplay(taskqueue *head);
 
 #endif

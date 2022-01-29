@@ -12,17 +12,25 @@
 #include <string.h>
 
 #include "taskQueue.h"
-#include "resultQueue.h"
 
 #define MAX_SIZE 4096
+#define RESULT_SIZE 262144
 
+typedef struct result {
+    int sequenceNumber;
+    char first_alpha;
+    unsigned char first_count;
+    char last_alpha;
+    unsigned char last_count;
+    unsigned char *midData;
+    int bufferLen;
+} Result;
+
+Result **resBuffer;
 taskqueue *tq;
-resultqueue *rq;
 int TASKS=0;
 int TOTAL_TASK=0;
 int SEQUENCE_NUMBER=0;
-int JOIN_THREADS=0;
-int FINISHED_THREADS=0;
 int PRINT_INDEX=0;
 char last_alpha=' ';
 int last_alpha_count=0;
@@ -31,95 +39,96 @@ pthread_mutex_t print;
 pthread_cond_t condQueue;
 pthread_cond_t printQueue;
 
-void executetask(Task t){
-    char content[MAX_SIZE];
-    memcpy(content, t.fileContent+t.index, sizeof content);
-    char alpha_prev = content[0];
-    unsigned char alpha_count = 1;
-    int bufferLen = 0;
-    int notecount = 0;
-    char *chars = (char *)malloc(sizeof(char)*MAX_SIZE);
-    unsigned char *counts = (unsigned char *)malloc(sizeof(unsigned char) * MAX_SIZE);
-    for (int i=1; i<=MAX_SIZE;i++)
-    {   
-        if(content[i] == alpha_prev) alpha_count ++;
-        else
-        {   
-            chars[bufferLen] = alpha_prev;
-            counts[bufferLen] = alpha_count;
-            notecount += alpha_count;
-            bufferLen ++;
-            alpha_prev = content[i];
-            alpha_count = 1;
-        }   
-    }
-    
-    pthread_mutex_lock(&print);
-    Result *r = (Result *)malloc(sizeof(Result));
-    r->character = chars;
-    r->count = counts;
-    r->sequenceNumber = t.sequenceNumber;
-    r->bufferLen = bufferLen-1;
-    resultEnqueue(rq, r);
-    pthread_cond_signal(&printQueue);
-    pthread_mutex_unlock(&print);
-}
 
-void tobinary(char alpha, unsigned char count){
-	fwrite(&alpha, 1, 1, stdout);
-	fwrite(&count, 1, 1, stdout);
-}
-
-void printdata(int threadCount){
-    while(PRINT_INDEX<TOTAL_TASK){
+// function to print the compressed data
+void printdata(){
+    while(PRINT_INDEX<TOTAL_TASK) {
         pthread_mutex_lock(&print);
-        // printf("resultIsempty %d %d %d %d\n",resultIsempty(rq), resultFrontIndex(rq),PRINT_INDEX, FINISHED_THREADS );
-        while (resultIsempty(rq) && (resultFrontIndex(rq)!=PRINT_INDEX))// && FINISHED_THREADS<threadCount))
-        {
-            // puts("1");
+        while (resBuffer[PRINT_INDEX]==NULL) {
             pthread_cond_wait(&printQueue, &print);
         }
-        // puts("2");
-        Result *r = resultDequeue(rq);
+        Result *r = resBuffer[PRINT_INDEX];
         pthread_mutex_unlock(&print);
-        int start=0;
         
-        if(PRINT_INDEX)
-        {   
-            if (r->character[0] == last_alpha)
-            {
-                tobinary(r->character[0], r->count[0]+last_alpha_count);
-                // printf("%c%d",r->character[0], r->count[0]+last_alpha_count);
-                start=1;
+        if(PRINT_INDEX){   
+            if (r->first_alpha == last_alpha){
+                fprintf(stdout, "%c%c", r->first_alpha, r->first_count+last_alpha_count);
             }
-            else
-            {
-                tobinary(last_alpha, last_alpha_count);
-                // printf("%c%d",last_alpha, last_alpha_count);
-                start=0;
+            else{
+                fprintf(stdout, "%c%c", last_alpha, last_alpha_count);
+                fprintf(stdout, "%c%c", r->first_alpha, r->first_count);
             }
         }
-        for(int i=start;i<r->bufferLen;i++)
-        {
-            tobinary(r->character[i], r->count[i]);
-            // printf("%c%d",r->character[i], r->count[i]);
+        else{
+            fprintf(stdout, "%c%c", r->first_alpha,r->first_count);
         }
-        last_alpha = r->character[r->bufferLen];
-        last_alpha_count = r->count[r->bufferLen];
+        fprintf(stdout, "%.*s", r->bufferLen, r->midData);
+
+        last_alpha = r->last_alpha;
+        last_alpha_count = r->last_count;
         PRINT_INDEX++;
 
-        free(r->character);
-        free(r->count);
+        free(r->midData);
         free(r);
     }
 }
 
-void submitTask(char *fileContent, int numberOfTasks){
+// funtion to read the file and store the data in the buffer
+void executetask(Task t){
+    int contentSize = t.index+MAX_SIZE<=t.fileSize ? MAX_SIZE : t.fileSize-t.index;
+    int start = t.index;
+    char alpha_prev = t.fileContent[start];
+    unsigned char alpha_count = 1;
+    int first = 1;
+
+    char first_alpha;
+    unsigned char first_count;
+    char last_alpha;
+    unsigned char last_count;
+    int bufferLen = 0;
+    unsigned char *midData = (unsigned char *)malloc(sizeof(unsigned char) * (2*MAX_SIZE));
+
+    for (int i=start+1; i<start+contentSize;i++) {   
+        if(t.fileContent[i] == alpha_prev) alpha_count ++;
+        else {
+            if (first){
+                first_alpha = alpha_prev;
+                first_count = alpha_count;
+                first=0;
+            }
+            else{
+                midData[bufferLen] = alpha_prev;
+                midData[bufferLen+1] = alpha_count;
+                bufferLen += 2;
+            }
+            alpha_prev = t.fileContent[i];
+            alpha_count = 1;
+        } 
+    }
+    last_alpha = alpha_prev;
+    last_count = alpha_count;
+
+    pthread_mutex_lock(&print);
+    Result *r = (Result *)malloc(sizeof(Result));
+    r->first_alpha = first_alpha;
+    r->first_count = first_count;
+    r->last_alpha = last_alpha;
+    r->last_count = last_count;
+    r->bufferLen = bufferLen;
+    r->midData = midData;
+    resBuffer[t.sequenceNumber] = r;
+    pthread_cond_signal(&printQueue);
+    pthread_mutex_unlock(&print);
+}
+
+// add task to the Task Queue
+void submitTask(char *fileContent, int fileSize, int numberOfTasks){
     for(int i=0;i<numberOfTasks;i++){
         pthread_mutex_lock(&mutexQueue);
         Task t = {
             .sequenceNumber = SEQUENCE_NUMBER,
             .fileContent = fileContent,
+            .fileSize = fileSize,
             .index = i*MAX_SIZE
         };
         SEQUENCE_NUMBER++;
@@ -130,15 +139,10 @@ void submitTask(char *fileContent, int numberOfTasks){
     }
 }
 
+// thread routine function
 void* allocateThread(void *args){
     while(1){
         pthread_mutex_lock(&mutexQueue);
-        // if(TASKS == 0 && TOTAL_TASK>0 && taskIsempty(tq)){
-        //     FINISHED_THREADS++;
-        //     // pthread_cond_signal(&printQueue);
-        //     pthread_mutex_unlock(&mutexQueue);
-        //     break;
-        // }
         while (TASKS == 0){
             pthread_cond_wait(&condQueue, &mutexQueue);
         }
@@ -149,6 +153,7 @@ void* allocateThread(void *args){
     }
 }
 
+// parallel encode
 void paralle_rle(char **argv, int start, int fileCount, int threadCount){   
     pthread_t thread[threadCount];
     pthread_mutex_init(&mutexQueue, NULL);
@@ -160,24 +165,20 @@ void paralle_rle(char **argv, int start, int fileCount, int threadCount){
     tq = malloc(sizeof(taskqueue));
     taskInitialize(tq);
 
-    // initialize the result queue
-    rq = malloc(sizeof(resultqueue));
-    resultInitialize(rq);
+    // initialize the result buffer
+    resBuffer = (Result **)malloc(sizeof(Result *) * RESULT_SIZE);
 
     // create all the threads
-    for(int i=0; i<threadCount; i++)
-    {
+    for(int i=0; i<threadCount; i++) {
         if (pthread_create(&thread[i], NULL, &allocateThread, NULL) != 0)
             perror("Error while creating a thread");
     }
 
     // create tasks
-    for(int i=start; i<start+fileCount; i++)
-    {   
+    for(int i=start; i<start+fileCount; i++) {   
         struct stat fs;
         int fd = open(argv[i], O_RDONLY, 0644);
-        if(fstat(fd, &fs) == -1)
-        {
+        if(fstat(fd, &fs) == -1) {
             perror("Error while reading file stat");
         }
         char *fileContent = mmap(NULL , fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
@@ -188,9 +189,12 @@ void paralle_rle(char **argv, int start, int fileCount, int threadCount){
         pthread_mutex_lock(&mutexQueue);
         TOTAL_TASK += numberOfTasks;
         pthread_mutex_unlock(&mutexQueue);
-        submitTask(fileContent, numberOfTasks);
-        printdata(threadCount);
-        
+        submitTask(fileContent, fs.st_size, numberOfTasks);
     }
-    tobinary(last_alpha, last_alpha_count);  
+
+    // print the result
+    printdata();
+    // print the last alpha
+    fprintf(stdout, "%c%c", last_alpha, last_alpha_count);
+    free(resBuffer);
 }

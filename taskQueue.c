@@ -28,14 +28,10 @@ void taskEnqueue(taskqueue *q, Task t){
 }
 
 Task taskDequeue(taskqueue *q){
-    // if (q->front == NULL)
-    //     return;
-    // Store previous front and move front one node ahead
     Task task = q->front->task;
     tnode *temp = q->front;
     q->front = q->front->next;
- 
-    // If front becomes NULL, then change rear also as NULL
+
     if (q->front == NULL)
         q->rear = NULL;
  
