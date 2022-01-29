@@ -9,66 +9,58 @@
 
 #include "sequential_rle.h"
 
-typedef struct data {
-    char last_alpha;
-    unsigned char last_count;
-} Data;
+char last_alpha;
+unsigned char last_count;
 
+// print binary data
 void print_data(char alpha, unsigned char count){
-	fwrite(&alpha, 1, 1, stdout);
-	fwrite(&count, 1, 1, stdout);
+	fprintf(stdout, "%c%c", alpha, count);
 }
 
 // encode a single file using mmap
-Data encode_file(char *filename, char last_alpha, int last_count, int fileindex){
+void encode_file(char *filename, int fileindex) {
     struct stat fs;
-    Data data;
-    unsigned char count = 1;
+    unsigned char alpha_count = 1;
 
     int fd = open(filename, O_RDONLY, 0644);
-    if(fstat(fd, &fs) == -1)
-    {
+    if(fstat(fd, &fs) == -1) {
         perror("Error while reading file stat");
     }
 
     char *file_content = mmap(NULL , fs.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    close(fd);
     char alpha_prev = file_content[0];
-    bool if_last_match = file_content[0] == last_alpha;
-    if (!if_last_match && fileindex!=1) print_data(last_alpha, last_count);
-    
-    for (int i=1; i<=fs.st_size;i++)
-    {
-        if(file_content[i] == alpha_prev) count ++;
+    int ifSame=0;
+
+    if(fileindex){
+        if (last_alpha == file_content[0]) ifSame=1;
+        else print_data(last_alpha, last_count);
+    }
+
+    for (int i=1; i<fs.st_size;i++) {
+        if(file_content[i] == alpha_prev) alpha_count ++;
         else{   
-            if (if_last_match)
-            {   
-                print_data(last_alpha, last_count+count);
-                if_last_match = false;
+            if (ifSame) {   
+                print_data(last_alpha, last_count+alpha_count);
+                ifSame = 0;
             }
-            else if (!isalpha(file_content[i]))
-            {
-                data.last_alpha = alpha_prev;
-                data.last_count = count;
-            }
-            else print_data(alpha_prev, count);
+            else print_data(alpha_prev, alpha_count);
             alpha_prev = file_content[i];
-            count = 1;
+            alpha_count = 1;
         }
     }
-    close(fd);
-    return data;
+    last_alpha = alpha_prev;
+    last_count = alpha_count;
+    
 }
 
+// sequential encode
 void sequential_rle(char **argv, int start, int fileCount){
-    char last_alpha;
-    int last_count = 0;
 
-    Data file_data;
-    for(int i=start;i<start+fileCount;i++)
-    {
-        file_data = encode_file(argv[i], last_alpha, last_count, i);
-        last_alpha = file_data.last_alpha;
-        last_count = file_data.last_count;
+    int fileIndex = 0;
+    for(int i=start;i<start+fileCount;i++) {
+        encode_file(argv[i], fileIndex);
+        fileIndex++;
     }
     print_data(last_alpha, last_count);
 }
