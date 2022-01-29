@@ -1,9 +1,9 @@
-#include <sys/mman.h> 
-#include <stdio.h> 
+#include <sys/mman.h>
+#include <stdio.h>
 #include <sys/stat.h>
-#include <unistd.h> 
-#include <fcntl.h> 
-#include <ctype.h> 
+#include <unistd.h>
+#include <fcntl.h>
+#include <ctype.h>
 #include <stdbool.h>
 #include <sys/mman.h>
 
@@ -39,8 +39,8 @@ void encode_file(char *filename, int fileindex) {
 
     for (int i=1; i<fs.st_size;i++) {
         if(file_content[i] == alpha_prev) alpha_count ++;
-        else{   
-            if (ifSame) {   
+        else{
+            if (ifSame) {
                 print_data(last_alpha, last_count+alpha_count);
                 ifSame = 0;
             }
@@ -51,7 +51,7 @@ void encode_file(char *filename, int fileindex) {
     }
     last_alpha = alpha_prev;
     last_count = alpha_count;
-    
+
 }
 
 // sequential encode

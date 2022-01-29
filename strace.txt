@@ -1,74 +1,76 @@
-execve("./nyuenc", ["./nyuenc", "-j", "3", "try.txt"], 0x7fff9a27e4e8 /* 54 vars */) = 0
-brk(NULL)                               = 0x1c34000
-mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f577b56a000
+execve("./nyuenc", ["./nyuenc", "-j", "3", "file.txt"], 0x7ffd49c9eb18 /* 54 vars */) = 0
+brk(NULL)                               = 0x212d000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f85f6e50000
 access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
 open("/usr/local/stow/gcc-9.2/lib64/tls/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-stat("/usr/local/stow/gcc-9.2/lib64/tls/x86_64", 0x7ffe3c5d29c0) = -1 ENOENT (No such file or directory)
+stat("/usr/local/stow/gcc-9.2/lib64/tls/x86_64", 0x7ffeb2761340) = -1 ENOENT (No such file or directory)
 open("/usr/local/stow/gcc-9.2/lib64/tls/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-stat("/usr/local/stow/gcc-9.2/lib64/tls", 0x7ffe3c5d29c0) = -1 ENOENT (No such file or directory)
+stat("/usr/local/stow/gcc-9.2/lib64/tls", 0x7ffeb2761340) = -1 ENOENT (No such file or directory)
 open("/usr/local/stow/gcc-9.2/lib64/x86_64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-stat("/usr/local/stow/gcc-9.2/lib64/x86_64", 0x7ffe3c5d29c0) = -1 ENOENT (No such file or directory)
+stat("/usr/local/stow/gcc-9.2/lib64/x86_64", 0x7ffeb2761340) = -1 ENOENT (No such file or directory)
 open("/usr/local/stow/gcc-9.2/lib64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
 stat("/usr/local/stow/gcc-9.2/lib64", {st_mode=S_IFDIR|0755, st_size=95, ...}) = 0
 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
-fstat(3, {st_mode=S_IFREG|0644, st_size=324926, ...}) = 0
-mmap(NULL, 324926, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f577b51a000
+fstat(3, {st_mode=S_IFREG|0644, st_size=329774, ...}) = 0
+mmap(NULL, 329774, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f85f6df9000
 close(3)                                = 0
 open("/lib64/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 3
 read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\200m\0\0\0\0\0\0"..., 832) = 832
 fstat(3, {st_mode=S_IFREG|0755, st_size=142144, ...}) = 0
-mmap(NULL, 2208904, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f577b12e000
-mprotect(0x7f577b145000, 2093056, PROT_NONE) = 0
-mmap(0x7f577b344000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x16000) = 0x7f577b344000
-mmap(0x7f577b346000, 13448, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f577b346000
+mmap(NULL, 2208904, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f85f6a09000
+mprotect(0x7f85f6a20000, 2093056, PROT_NONE) = 0
+mmap(0x7f85f6c1f000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x16000) = 0x7f85f6c1f000
+mmap(0x7f85f6c21000, 13448, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f85f6c21000
 close(3)                                = 0
 open("/usr/local/stow/gcc-9.2/lib64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
 open("/lib64/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
 read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0`&\2\0\0\0\0\0"..., 832) = 832
-fstat(3, {st_mode=S_IFREG|0755, st_size=2156592, ...}) = 0
-mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f577b519000
-mmap(NULL, 3985920, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f577ad60000
-mprotect(0x7f577af24000, 2093056, PROT_NONE) = 0
-mmap(0x7f577b123000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1c3000) = 0x7f577b123000
-mmap(0x7f577b129000, 16896, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f577b129000
+fstat(3, {st_mode=S_IFREG|0755, st_size=2156352, ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f85f6e4f000
+mmap(NULL, 3985920, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f85f6639000
+mprotect(0x7f85f67fd000, 2093056, PROT_NONE) = 0
+mmap(0x7f85f69fc000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1c3000) = 0x7f85f69fc000
+mmap(0x7f85f6a02000, 16896, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f85f6a02000
 close(3)                                = 0
-mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f577b517000
-arch_prctl(ARCH_SET_FS, 0x7f577b517740) = 0
-access("/etc/sysconfig/strcasecmp-nonascii", F_OK) = -1 ENOENT (No such file or directory)
-access("/etc/sysconfig/strcasecmp-nonascii", F_OK) = -1 ENOENT (No such file or directory)
-mprotect(0x7f577b123000, 16384, PROT_READ) = 0
-mprotect(0x7f577b344000, 4096, PROT_READ) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f85f6e4d000
+arch_prctl(ARCH_SET_FS, 0x7f85f6e4d740) = 0
+mprotect(0x7f85f69fc000, 16384, PROT_READ) = 0
+mprotect(0x7f85f6c1f000, 4096, PROT_READ) = 0
 mprotect(0x601000, 4096, PROT_READ)     = 0
-mprotect(0x7f577b56b000, 4096, PROT_READ) = 0
-munmap(0x7f577b51a000, 324926)          = 0
-set_tid_address(0x7f577b517a10)         = 16780
-set_robust_list(0x7f577b517a20, 24)     = 0
-rt_sigaction(SIGRTMIN, {sa_handler=0x7f577b134860, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f577b13d630}, NULL, 8) = 0
-rt_sigaction(SIGRT_1, {sa_handler=0x7f577b1348f0, sa_mask=[], sa_flags=SA_RESTORER|SA_RESTART|SA_SIGINFO, sa_restorer=0x7f577b13d630}, NULL, 8) = 0
+mprotect(0x7f85f6e4a000, 4096, PROT_READ) = 0
+munmap(0x7f85f6df9000, 329774)          = 0
+set_tid_address(0x7f85f6e4da10)         = 39732
+set_robust_list(0x7f85f6e4da20, 24)     = 0
+rt_sigaction(SIGRTMIN, {sa_handler=0x7f85f6a0f860, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f85f6a18630}, NULL, 8) = 0
+rt_sigaction(SIGRT_1, {sa_handler=0x7f85f6a0f8f0, sa_mask=[], sa_flags=SA_RESTORER|SA_RESTART|SA_SIGINFO, sa_restorer=0x7f85f6a18630}, NULL, 8) = 0
 rt_sigprocmask(SIG_UNBLOCK, [RTMIN RT_1], NULL, 8) = 0
 getrlimit(RLIMIT_STACK, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
-brk(NULL)                               = 0x1c34000
-brk(0x1c55000)                          = 0x1c55000
-brk(NULL)                               = 0x1c55000
-mmap(NULL, 8392704, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f577a55f000
-mprotect(0x7f577a55f000, 4096, PROT_NONE) = 0
-clone(child_stack=0x7f577ad5efb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f577ad5f9d0, tls=0x7f577ad5f700, child_tidptr=0x7f577ad5f9d0) = 16781
-mmap(NULL, 8392704, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f5779d5e000
-mprotect(0x7f5779d5e000, 4096, PROT_NONE) = 0
-clone(child_stack=0x7f577a55dfb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f577a55e9d0, tls=0x7f577a55e700, child_tidptr=0x7f577a55e9d0) = 16782
-mmap(NULL, 8392704, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f577955d000
-mprotect(0x7f577955d000, 4096, PROT_NONE) = 0
-clone(child_stack=0x7f5779d5cfb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f5779d5d9d0, tls=0x7f5779d5d700, child_tidptr=0x7f5779d5d9d0) = 16783
-open("try.txt", O_RDONLY)               = 3
-fstat(3, {st_mode=S_IFREG|0644, st_size=9450, ...}) = 0
-mmap(NULL, 9450, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f577b567000
-futex(0x6ca1e4, FUTEX_WAKE_OP_PRIVATE, 1, 1, 0x6ca1e0, FUTEX_OP_SET<<28|0<<12|FUTEX_OP_CMP_GT<<24|0x1) = 1
-futex(0x6ca1e4, FUTEX_WAKE_OP_PRIVATE, 1, 1, 0x6ca1e0, FUTEX_OP_SET<<28|0<<12|FUTEX_OP_CMP_GT<<24|0x1) = 2
-futex(0x6ca1e4, FUTEX_WAKE_OP_PRIVATE, 1, 1, 0x6ca1e0, FUTEX_OP_SET<<28|0<<12|FUTEX_OP_CMP_GT<<24|0x1) = 1
+brk(NULL)                               = 0x212d000
+brk(0x214e000)                          = 0x214e000
+brk(NULL)                               = 0x214e000
+mmap(NULL, 2101248, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f85f6438000
+mmap(NULL, 8392704, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f85f5c37000
+mprotect(0x7f85f5c37000, 4096, PROT_NONE) = 0
+clone(child_stack=0x7f85f6436fb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f85f64379d0, tls=0x7f85f6437700, child_tidptr=0x7f85f64379d0) = 39733
+mmap(NULL, 8392704, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f85f5436000
+mprotect(0x7f85f5436000, 4096, PROT_NONE) = 0
+clone(child_stack=0x7f85f5c35fb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f85f5c369d0, tls=0x7f85f5c36700, child_tidptr=0x7f85f5c369d0) = 39734
+mmap(NULL, 8392704, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f85f4c35000
+mprotect(0x7f85f4c35000, 4096, PROT_NONE) = 0
+clone(child_stack=0x7f85f5434fb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f85f54359d0, tls=0x7f85f5435700, child_tidptr=0x7f85f54359d0) = 39735
+open("file.txt", O_RDONLY)              = -1 ENOENT (No such file or directory)
+fstat(-1, 0x7ffeb2762aa0)               = -1 EBADF (Bad file descriptor)
+dup(2)                                  = 3
+fcntl(3, F_GETFL)                       = 0x8001 (flags O_WRONLY|O_LARGEFILE)
 close(3)                                = 0
+write(2, "Error while reading file stat: B"..., 51Error while reading file stat: Bad file descriptor
+) = 51
+mmap(NULL, 0, PROT_READ, MAP_PRIVATE, -1, 0) = -1 EBADF (Bad file descriptor)
+close(-1)                               = -1 EBADF (Bad file descriptor)
 fstat(1, {st_mode=S_IFCHR|0666, st_rdev=makedev(1, 3), ...}) = 0
-ioctl(1, TCGETS, 0x7ffe3c5d3e50)        = -1 ENOTTY (Inappropriate ioctl for device)
-mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f577b566000
-write(1, "a2b2c2d2e2f2g2h2i2a2b2c2d2e2f2g2"..., 296) = 296
+ioctl(1, TCGETS, 0x7ffeb2762200)        = -1 ENOTTY (Inappropriate ioctl for device)
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f85f6e49000
+munmap(0x7f85f6438000, 2101248)         = 0
+write(1, " \0", 2)                      = 2
 exit_group(0)                           = ?
 +++ exited with 0 +++
